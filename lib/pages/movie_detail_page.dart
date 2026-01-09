@@ -12,7 +12,7 @@ class MovieDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
-    final isFavorite = favoriteProvider.isFavorite(movie);
+    final isFavorite = favoriteProvider.isFavorite(movie.id);
 
     return Scaffold(
       appBar: AppBar(

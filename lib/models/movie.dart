@@ -1,3 +1,4 @@
+/// lib/models/movie.dart
 class Movie {
   final int id;
   final String title;
@@ -13,31 +14,35 @@ class Movie {
     required this.rating,
   });
 
+  // 🔹 Dari TMDB API
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(
       id: json['id'],
       title: json['title'] ?? '',
       overview: json['overview'] ?? '',
       posterPath: json['poster_path'] ?? '',
-      rating: (json['vote_average'] as num?)?.toDouble() ?? 0.0,
+      rating: (json['vote_average'] ?? 0).toDouble(),
     );
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'overview': overview,
-    'posterPath': posterPath,
-    'rating': rating,
-  };
+  // 🔹 Untuk disimpan ke local storage
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'overview': overview,
+      'poster_path': posterPath,
+      'vote_average': rating,
+    };
+  }
 
   factory Movie.fromStorage(Map<String, dynamic> json) {
     return Movie(
       id: json['id'],
       title: json['title'],
       overview: json['overview'],
-      posterPath: json['posterPath'],
-      rating: json['rating'],
+      posterPath: json['poster_path'],
+      rating: (json['vote_average'] ?? 0).toDouble(),
     );
   }
 }

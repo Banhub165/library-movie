@@ -5,12 +5,12 @@ import 'locator.dart';
 import 'providers/movie_provider.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/location_provider.dart';
 import 'pages/home_page.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
-
   runApp(const MyApp());
 }
 
@@ -21,15 +21,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Theme (Light / Dark)
         ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
-
-        // Movie Provider
         ChangeNotifierProvider(create: (_) => MovieProvider()..fetchMovies()),
-
-        // Favorite Provider
         ChangeNotifierProvider(
           create: (_) => FavoriteProvider()..loadFavorites(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => locator<LocationProvider>()..fetchLocation(),
         ),
       ],
       child: Consumer<ThemeProvider>(
@@ -46,7 +44,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.red,
             ),
             themeMode: theme.isDark ? ThemeMode.dark : ThemeMode.light,
-            home: HomePage(),
+            home: const HomePage(),
           );
         },
       ),
