@@ -5,10 +5,12 @@ import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/location_provider.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/movie_card.dart';
 import '../models/movie.dart';
 import 'movie_detail_page.dart';
 import 'favorite_page.dart';
+import 'login_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -52,6 +54,22 @@ class HomePage extends StatelessWidget {
               context.read<MovieProvider>().fetchMovies();
             },
           ),
+
+          // 🚪 Logout
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await context.read<AuthProvider>().logout();
+
+              if (context.mounted) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  (route) => false,
+                );
+              }
+            },
+          ),
         ],
       ),
       body: Column(
@@ -79,7 +97,10 @@ class HomePage extends StatelessWidget {
 
     if (provider.error != null) {
       return Center(
-        child: Text(provider.error!, style: const TextStyle(color: Colors.red)),
+        child: Text(
+          provider.error!,
+          style: const TextStyle(color: Colors.red),
+        ),
       );
     }
 
@@ -98,7 +119,9 @@ class HomePage extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => MovieDetailPage(movie: movie)),
+              MaterialPageRoute(
+                builder: (_) => MovieDetailPage(movie: movie),
+              ),
             );
           },
         );

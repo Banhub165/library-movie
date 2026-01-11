@@ -6,7 +6,10 @@ import 'providers/movie_provider.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/location_provider.dart';
+import 'providers/auth_provider.dart';
+
 import 'pages/home_page.dart';
+import 'pages/login_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,15 +26,14 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
         ChangeNotifierProvider(create: (_) => MovieProvider()..fetchMovies()),
-        ChangeNotifierProvider(
-          create: (_) => FavoriteProvider()..loadFavorites(),
-        ),
+        ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
         ChangeNotifierProvider(
           create: (_) => locator<LocationProvider>()..fetchLocation(),
         ),
+        ChangeNotifierProvider(create: (_) => AuthProvider()), // 🔐 Auth
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, theme, _) {
+      child: Consumer2<ThemeProvider, AuthProvider>(
+        builder: (context, theme, auth, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Movie Library',
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
               primarySwatch: Colors.red,
             ),
             themeMode: theme.isDark ? ThemeMode.dark : ThemeMode.light,
-            home: const HomePage(),
+            home: auth.isLoggedIn ? const HomePage() : const LoginPage(),
           );
         },
       ),

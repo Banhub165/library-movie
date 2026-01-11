@@ -10,5 +10,8 @@ void setupLocator() {
   locator.registerLazySingleton<ApiService>(() => ApiService());
   locator.registerLazySingleton<StorageService>(() => StorageService());
   locator.registerLazySingleton<LocationService>(() => LocationService());
-  locator.registerFactory<LocationProvider>(() => LocationProvider(locator()));
+
+  locator.registerFactory<LocationProvider>(
+    () => LocationProvider(locator<LocationService>()),
+  );
 }

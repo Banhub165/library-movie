@@ -2,26 +2,27 @@ import 'package:flutter/material.dart';
 import '../services/location_service.dart';
 
 class LocationProvider extends ChangeNotifier {
-  final LocationService _service;
+  final LocationService _locationService;
 
-  LocationProvider(this._service);
+  LocationProvider(this._locationService);
 
-  bool loading = false;
-  String? country;
-  String? error;
+  String _country = 'Detecting...';
+  bool _loading = true;
+
+  String get country => _country;
+  bool get loading => _loading;
 
   Future<void> fetchLocation() async {
-    loading = true;
-    error = null;
+    _loading = true;
     notifyListeners();
 
     try {
-      country = await _service.getCountry();
+      _country = await _locationService.getCountry();
     } catch (e) {
-      error = e.toString();
+      _country = 'Location Error';
     }
 
-    loading = false;
+    _loading = false;
     notifyListeners();
   }
 }
