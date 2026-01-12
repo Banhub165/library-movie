@@ -12,8 +12,23 @@ import 'movie_detail_page.dart';
 import 'favorite_page.dart';
 import 'login_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Panggil lokasi sekali saat halaman pertama kali dibuka
+    Future.microtask(() {
+      context.read<LocationProvider>().fetchLocation();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +67,7 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.refresh),
             onPressed: () {
               context.read<MovieProvider>().fetchMovies();
+              context.read<LocationProvider>().fetchLocation(); // refresh lokasi juga
             },
           ),
 
@@ -79,8 +95,24 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12),
             child: locationProvider.loading
-                ? const Text('Detecting location...')
-                : Text('📍 Region: ${locationProvider.country ?? "Unknown"}'),
+                ? const Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 8),
+                      Text('Detecting location...'),
+                    ],
+                  )
+                : Text(
+                    '📍 Region: ${locationProvider.country}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
           ),
 
           // 🎬 Movie list
