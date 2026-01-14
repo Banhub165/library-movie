@@ -39,6 +39,21 @@ class FavoriteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // TOGGLE WATCHED
+  Future<void> toggleWatched(Movie movie) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final index = _favorites.indexWhere((m) => m.id == movie.id);
+    if (index == -1) return;
+
+    _favorites[index].watched = !_favorites[index].watched;
+
+    final jsonList = _favorites.map((m) => m.toJson()).toList();
+    await prefs.setString(_key, json.encode(jsonList));
+
+    notifyListeners();
+  }
+
   bool isFavorite(int movieId) {
     return _favorites.any((m) => m.id == movieId);
   }

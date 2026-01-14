@@ -26,26 +26,69 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()..loadTheme()),
         ChangeNotifierProvider(create: (_) => MovieProvider()..fetchMovies()),
-        ChangeNotifierProvider(create: (_) => FavoriteProvider()..loadFavorites()),
+        ChangeNotifierProvider(
+          create: (_) => FavoriteProvider()..loadFavorites(),
+        ),
         ChangeNotifierProvider(
           create: (_) => locator<LocationProvider>()..fetchLocation(),
         ),
-        ChangeNotifierProvider(create: (_) => AuthProvider()), // 🔐 Auth
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: Consumer2<ThemeProvider, AuthProvider>(
         builder: (context, theme, auth, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Movie Library',
+            title: 'My Movie Mine',
+
+            // LIGHT THEME
             theme: ThemeData(
               brightness: Brightness.light,
-              primarySwatch: Colors.red,
+              scaffoldBackgroundColor: Colors.white,
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                iconTheme: IconThemeData(color: Colors.black),
+                titleTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              iconTheme: const IconThemeData(color: Colors.black87),
+              textTheme: const TextTheme(
+                bodyLarge: TextStyle(color: Colors.black),
+                bodyMedium: TextStyle(color: Colors.black87),
+              ),
             ),
+
+            // DARK THEME (PREMIUM CINEMA STYLE)
             darkTheme: ThemeData(
               brightness: Brightness.dark,
-              primarySwatch: Colors.red,
+              scaffoldBackgroundColor: const Color(0xFF0E0E0E),
+              cardColor: const Color(0xFF1C1C1C),
+
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.transparent,
+                foregroundColor: Colors.white,
+                iconTheme: IconThemeData(color: Colors.white),
+                titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              iconTheme: const IconThemeData(color: Colors.white70),
+
+              textTheme: const TextTheme(
+                bodyLarge: TextStyle(color: Colors.white),
+                bodyMedium: TextStyle(color: Colors.white70),
+                titleMedium: TextStyle(color: Colors.white),
+              ),
             ),
+
             themeMode: theme.isDark ? ThemeMode.dark : ThemeMode.light,
+
             home: auth.isLoggedIn ? const HomePage() : const LoginPage(),
           );
         },

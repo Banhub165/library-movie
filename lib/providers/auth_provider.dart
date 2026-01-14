@@ -20,6 +20,12 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // DIPAKAI SAAT PINDAH HALAMAN
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
+
   Future<bool> register(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -37,6 +43,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> login(String email, String password) async {
     _loading = true;
+    _error = null;
     notifyListeners();
 
     final prefs = await SharedPreferences.getInstance();
@@ -64,6 +71,7 @@ class AuthProvider extends ChangeNotifier {
     await prefs.remove('isLoggedIn');
     await prefs.remove('currentUser');
     _isLoggedIn = false;
+    _error = null;
     notifyListeners();
   }
 }
